@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El precio de decir la verdad · José Rubén Zamora · CADF 2026</title>
+<meta name="description" content="Presentación que acompaña el discurso inaugural de José Rubén Zamora en el Central America Donors Forum 2026.">
+<link rel="icon" href="img/marca/elarchivo-avatar-oscuro.svg">
+<style>
+@font-face{font-family:Poppins;src:url(fonts/Poppins-Regular.ttf) format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:Poppins;src:url(fonts/Poppins-Medium.ttf) format("truetype");font-weight:500;font-display:swap}
+@font-face{font-family:Poppins;src:url(fonts/Poppins-SemiBold.ttf) format("truetype");font-weight:600;font-display:swap}
+@font-face{font-family:Poppins;src:url(fonts/Poppins-Bold.ttf) format("truetype");font-weight:700;font-display:swap}
+
+:root{
+  --ink:#1E1E1E; --red:#E41D12; --coral:#FF7360; --white:#FFFFFF;
+  --g1:#3F3F3F; --g2:#6B6B6B; --g3:#9A9A9A; --g4:#D8D8D8; --g5:#F2F2F2;
+  --card:#2B2B2B; --ondark:#B4B4B4;
+  --ease:cubic-bezier(.65,0,.35,1);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:var(--ink);color:var(--white);overflow:hidden;
+  font-family:Poppins,"Century Gothic",Futura,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+#viewport{position:fixed;inset:0;overflow:hidden;cursor:pointer;background:var(--ink)}
+#canvas{position:absolute;left:0;top:0;transform-origin:0 0}
+.anim #canvas{will-change:transform}
+
+/* Fondo del lienzo: mapa regional muy tenue */
+#fondo{position:absolute;left:-4000px;top:-3200px;width:30000px;opacity:.05;pointer-events:none}
+#fondo svg{width:100%;height:auto;--pais:#FFFFFF;--ctx:#FFFFFF}
+
+/* Marcos */
+.frame{position:absolute;width:1920px;height:1080px;left:0;top:0;padding:120px 140px;
+  transform-origin:50% 50%;opacity:.28;transition:opacity 1s var(--ease)}
+.frame.active,.frame.near{opacity:1}
+#viewport.overview .frame{opacity:1}
+.frame.bordered{background:rgba(255,255,255,.02);outline:2px solid rgba(255,255,255,.07)}
+
+.kicker{font-weight:600;font-size:30px;letter-spacing:.18em;text-transform:uppercase;color:var(--ondark);margin:0 0 28px}
+.kicker b{color:var(--red);font-weight:600}
+h1,h2,h3,p{margin:0}
+h1{font-weight:700;font-size:150px;line-height:1.02;letter-spacing:-.02em}
+h2{font-weight:700;font-size:92px;line-height:1.06;letter-spacing:-.015em}
+h3{font-weight:600;font-size:52px;line-height:1.15}
+.lead{font-size:44px;line-height:1.4;color:var(--g4);font-weight:400}
+.small{font-size:30px;line-height:1.4;color:var(--ondark)}
+.under{display:inline-block;width:.62em;height:.085em;background:var(--red);vertical-align:baseline;margin-left:.06em}
+.red{color:var(--red)}
+.coral{color:var(--coral)}
+.bar{width:160px;height:10px;background:var(--red);margin:36px 0}
+.row{display:flex;gap:80px;align-items:center;height:100%}
+.col{flex:1;min-width:0}
+.stack>*+*{margin-top:28px}
+
+.cover{display:block;box-shadow:0 30px 80px rgba(0,0,0,.55);border-radius:4px}
+.caption{font-size:24px;color:var(--g3);margin-top:18px;line-height:1.35}
+
+.stat{border-left:10px solid var(--red);padding:6px 0 6px 36px}
+.stat .n{font-size:88px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.stat .t{font-size:32px;line-height:1.35;color:var(--g4);margin-top:10px}
+
+.chips{display:flex;flex-wrap:wrap;gap:18px}
+.chip{font-size:30px;padding:14px 28px;border:2px solid var(--g1);border-radius:999px;color:var(--g4)}
+
+.quote{font-weight:600;font-size:96px;line-height:1.12;letter-spacing:-.01em}
+.quote .q{color:var(--red)}
+
+/* Zonas de detalle sobre páginas del periódico */
+.page{position:absolute;display:block;box-shadow:0 40px 120px rgba(0,0,0,.6);border-radius:4px;background:#fff}
+.spot{position:absolute;border:0 solid var(--red);border-radius:10px;opacity:0;transition:opacity .7s var(--ease);pointer-events:none}
+.spot.active{opacity:1}
+.spot .label{position:absolute;left:0;right:0;top:100%;margin-top:.6em;background:var(--red);color:#fff;
+  font-weight:600;line-height:1.25;padding:.45em .7em;border-radius:6px}
+
+/* Línea de tiempo */
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-top:70px;position:relative}
+.timeline:before{content:"";position:absolute;left:0;right:0;top:22px;height:4px;background:var(--g1)}
+.tl{position:relative;padding-top:80px}
+.tl:before{content:"";position:absolute;top:6px;left:0;width:36px;height:36px;border-radius:50%;background:var(--red)}
+.tl .d{font-weight:700;font-size:44px}
+.tl .x{font-size:30px;line-height:1.35;color:var(--g4);margin-top:12px}
+
+/* Barras de tarifa */
+.bars .b{margin-top:44px}
+.bars .lab{display:flex;justify-content:space-between;font-size:32px;color:var(--g4);margin-bottom:12px}
+.bars .lab strong{color:#fff;font-size:44px}
+.bars .track{height:54px;background:var(--card);border-radius:6px;overflow:hidden}
+.bars .fill{height:100%;width:0;background:var(--g3);transition:width 1.6s var(--ease) .4s}
+.bars .fill.r{background:var(--red)}
+
+/* Contador */
+.counter{font-weight:700;font-size:400px;line-height:.9;letter-spacing:-.04em}
+
+/* Personas sin fotografía: retrato tipográfico */
+.person{background:var(--card);border-radius:14px;padding:48px 52px;position:relative;overflow:hidden}
+.person .name{font-weight:700;font-size:72px;line-height:1.05}
+.person .role{font-size:30px;color:var(--ondark);margin-top:14px}
+.person .mono{position:absolute;right:-20px;bottom:-70px;font-weight:700;font-size:300px;color:rgba(255,255,255,.04);line-height:1}
+.facts{list-style:none;padding:0;margin:0}
+.facts li{font-size:34px;line-height:1.35;color:var(--g4);padding:18px 0 18px 48px;border-top:2px solid var(--g1);position:relative}
+.facts li:before{content:"";position:absolute;left:0;top:32px;width:18px;height:18px;background:var(--red)}
+.facts li strong{color:#fff;font-weight:600}
+
+/* 48 cantones: banda de puntos */
+.cantones{display:grid;grid-template-columns:repeat(24,1fr);gap:14px;margin-top:56px}
+.cantones i{display:block;aspect-ratio:1;border-radius:50%;background:var(--g1);transform:scale(.4);transition:transform .6s var(--ease),background .6s}
+.frame.active .cantones i{transform:scale(1);background:var(--coral)}
+
+/* Mapa */
+.mapa{width:100%;height:auto;display:block}
+.mapa .pais{fill:var(--g1);stroke:var(--ink);stroke-width:2}
+.mapa .ctx{fill:#262626;stroke:var(--ink);stroke-width:2}
+
+/* Red de solidaridad */
+#red .link{stroke:var(--coral);stroke-width:4;fill:none;stroke-dasharray:1400;stroke-dashoffset:1400;transition:stroke-dashoffset 2.2s var(--ease)}
+#red .ext{opacity:0;transition:opacity 1s var(--ease) .8s}
+#red .isla circle.core{fill:var(--red)}
+#red .isla circle.halo{fill:var(--red);opacity:.25;transform-box:fill-box;transform-origin:center;animation:pulso 2.8s ease-in-out infinite}
+#red text{font-family:Poppins,sans-serif;fill:#fff;stroke:#1E1E1E;stroke-width:10px;paint-order:stroke;stroke-linejoin:round}
+.frame.state-2 #red .link{stroke-dashoffset:0}
+.frame.state-2 #red .ext{opacity:1}
+.swap .s2{display:none}
+.frame.state-2 .swap .s1{display:none}
+.frame.state-2 .swap .s2{display:block}
+@keyframes pulso{0%,100%{transform:scale(1)}50%{transform:scale(1.9)}}
+
+/* Ciclo */
+#ciclo .ring{transform-origin:600px 600px;animation:gira 60s linear infinite}
+@keyframes gira{to{transform:rotate(360deg)}}
+
+/* Peticiones */
+.asks{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;margin-top:60px}
+.ask{background:var(--card);border-radius:14px;padding:44px 48px;border-top:10px solid var(--red)}
+.ask .k{font-weight:700;font-size:56px;color:var(--red)}
+.ask .h{font-weight:600;font-size:40px;line-height:1.2;margin-top:8px}
+.ask .t{font-size:28px;line-height:1.4;color:var(--ondark);margin-top:14px}
+
+/* Foto de fondo */
+.bgphoto{position:absolute;inset:0;background-size:cover;background-position:center;border-radius:6px}
+.bgphoto:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(30,30,30,.94) 0%,rgba(30,30,30,.78) 55%,rgba(30,30,30,.35) 100%)}
+.onphoto{position:relative;z-index:1}
+
+/* Interfaz */
+#hud{position:fixed;left:0;right:0;bottom:0;height:6px;background:rgba(255,255,255,.06);z-index:5}
+#hud i{display:block;height:100%;width:0;background:var(--red);transition:width .8s var(--ease)}
+#num{position:fixed;right:22px;bottom:20px;font-size:13px;letter-spacing:.12em;color:var(--g2);z-index:5;opacity:0;transition:opacity .4s}
+body.moving #num{opacity:1}
+#help{position:fixed;left:22px;bottom:20px;font-size:13px;color:var(--g2);z-index:5;opacity:0;transition:opacity .4s}
+body.moving #help{opacity:1}
+#notes{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);max-width:min(900px,90vw);background:rgba(0,0,0,.82);
+  color:#fff;font-size:18px;line-height:1.45;padding:14px 20px;border-left:5px solid var(--red);border-radius:6px;z-index:6}
+#blank{position:fixed;inset:0;background:#000;z-index:9;opacity:0;pointer-events:none;transition:opacity .5s}
+body.blank #blank{opacity:1;pointer-events:auto}
+#loading{position:fixed;inset:0;display:grid;place-items:center;background:var(--ink);z-index:10;font-size:14px;letter-spacing:.2em;color:var(--g2);transition:opacity .6s}
+body.ready #loading{opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><!--MAPA--></defs></svg>
+
+<div id="viewport">
+<div id="canvas">
+
+  <div id="fondo"><svg class="mapa" viewBox="0 0 1600 1178"><use href="#mapa-ca"/></svg></div>
+
+  <!-- 1 · Portada -->
+  <section class="frame" id="titulo" data-x="0" data-y="0" data-s="1"
+    data-cue="Buenos días a todas y a todos.">
+    <div class="row">
+      <div class="col" style="flex:1.35">
+        <p class="kicker">CADF 2026 · <b>Keynote</b></p>
+        <h1>El precio de decir la verdad<span class="under"></span></h1>
+        <div class="bar"></div>
+        <p class="lead"><strong style="color:#fff;font-weight:600">José Rubén Zamora</strong><br>Periodismo bajo asedio: un testimonio</p>
+      </div>
+      <div class="col" style="flex:.8">
+        <svg class="mapa" viewBox="0 0 1600 1178" style="--GTM:var(--red)"><use href="#mapa-ca"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · Todavía no es libre -->
+  <section class="frame" id="libre" data-x="0" data-y="1500" data-s="1"
+    data-cue="Les hablo como un hombre que todavía no es libre.">
+    <div class="row">
+      <div class="col" style="flex:.55">
+        <img class="cover" src="img/personas/jose-ruben-zamora.jpg" alt="Retrato de José Rubén Zamora" style="width:100%;filter:grayscale(1) contrast(1.05)">
+        <p class="caption">Foto: elPeriódico, CC BY 3.0</p>
+      </div>
+      <div class="col stack">
+        <p class="quote"><span class="q">“</span>Les hablo como un hombre que todavía no es libre.<span class="q">”</span></p>
+        <div class="chips" style="margin-top:56px">
+          <span class="chip">Arresto domiciliario</span>
+          <span class="chip">Procesos penales abiertos</span>
+          <span class="chip">Sin permiso para atenderse fuera del país</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · elPeriódico -->
+  <section class="frame" id="periodico" data-x="2500" data-y="1500" data-s="1"
+    data-cue="Durante 27 años, desde 1996, elPeriódico fue mi vida…">
+    <div class="row">
+      <div class="col stack" style="flex:1.2">
+        <p class="kicker">elPeriódico · <b>1996 a 2023</b></p>
+        <h2>27 años fiscalizando al poder</h2>
+        <div style="display:flex;gap:60px;margin-top:50px">
+          <div class="stat"><div class="n">27</div><div class="t">años</div></div>
+          <div class="stat"><div class="n">7</div><div class="t">gobiernos fiscalizados</div></div>
+          <div class="stat"><div class="n">100s</div><div class="t">de investigaciones</div></div>
+        </div>
+        <div class="chips" style="margin-top:56px">
+          <span class="chip">Coimas en medicinas del IGSS</span>
+          <span class="chip">Negocios en las portuarias</span>
+          <span class="chip">Plazas fantasma del Congreso</span>
+          <span class="chip">El narco y la Presidencia</span>
+        </div>
+      </div>
+      <div class="col" style="flex:.62">
+        <img class="cover" src="img/coberturas/ep-1996-p1.jpg" alt="Portada de elPeriódico del 7 de noviembre de 1996" style="width:100%;transform:rotate(2deg)">
+        <p class="caption">Edición No. 0002, 7 de noviembre de 1996</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Soledad y marginalidad (marco pequeño, zoom) -->
+  <section class="frame bordered" id="soledad" data-x="3500" data-y="2500" data-s=".55" data-r="-3"
+    data-cue="Lo hicimos, casi siempre, en un contexto de soledad y marginalidad…">
+    <p class="kicker">No es la primera vez</p>
+    <h2 style="font-size:110px">En un contexto de <span class="red">soledad</span> y <span class="red">marginalidad</span></h2>
+    <div class="chips" style="margin-top:70px">
+      <span class="chip">2003: un comando armado toma nuestra casa</span>
+      <span class="chip">Campañas de difamación</span>
+      <span class="chip">Boicots publicitarios</span>
+      <span class="chip">Amenazas</span>
+      <span class="chip">Tentativas de asesinato moral</span>
+    </div>
+  </section>
+
+  <!-- 5 · Vacuna rusa -->
+  <section class="frame" id="vacuna" data-x="5400" data-y="1500" data-s="1"
+    data-cue="Ese año, en plena pandemia… la vacuna rusa Sputnik V.">
+    <div class="row">
+      <div class="col" style="flex:.62">
+        <img class="cover" src="img/coberturas/ep-2021-05-03-p1.jpg" alt="Portada del 3 de mayo de 2021: Empresa intermediaria negoció vacuna rusa con Guatemala" style="width:100%;transform:rotate(-2deg)">
+        <p class="caption">elPeriódico, 3 de mayo de 2021</p>
+      </div>
+      <div class="col stack" style="flex:1.2">
+        <p class="kicker">2021 · <b>En plena pandemia</b></p>
+        <h2>La vacuna rusa</h2>
+        <div class="stack" style="margin-top:50px">
+          <div class="stat"><div class="n">16 millones</div><div class="t">de dosis de Sputnik V, negociadas con una intermediaria sin empleados ni historial comercial</div></div>
+          <div class="stat"><div class="n">Q614.5 millones</div><div class="t">pagados por adelantado: la mitad del costo</div></div>
+          <div class="stat"><div class="n">3 lotes</div><div class="t">de 150 mil dosis recibidos, a julio de 2021</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Página: Salud se niega a entregar el contrato -->
+  <img class="page" id="pg-vacuna" src="img/coberturas/hd-2021-07-03-p5.jpg" alt="Página 5 del 3 de julio de 2021: Salud se niega a entregar al MP el contrato con Rusia"
+    data-left="6700" data-top="1150" data-w="1500">
+  <div class="spot" id="spot-vacuna" data-img="pg-vacuna" data-cx=".69" data-cy=".565" data-cw=".62"
+    data-label="El Ministerio de Salud se negó a entregar el contrato a la Fiscalía"
+    data-cue="Cuando la Fiscalía pidió el contrato, el Ministerio se negó a entregarlo."></div>
+
+  <!-- 6 · Los rusos -->
+  <section class="frame" id="rusos" data-x="9700" data-y="1500" data-s="1"
+    data-cue="Y ese mismo año contamos la historia de los siete días que nos visitaron los rusos.">
+    <div class="row">
+      <div class="col stack" style="flex:1.15">
+        <p class="kicker">Publicado el 25 de agosto de 2021</p>
+        <h2 style="font-size:104px">Los 7 días que nos visitaron los rusos</h2>
+        <p class="lead" style="margin-top:44px">Jets, helicópteros, limosinas, hoteles cerrados, fiestas y el Parque Tikal cerrado para la ocasión.</p>
+      </div>
+      <div class="col" style="flex:.62">
+        <img class="cover" src="img/coberturas/ep-2021-08-25-p1.jpg" alt="Portada del 25 de agosto de 2021: Los 7 días que nos visitaron los rusos" style="width:100%;transform:rotate(2deg)">
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Cronología -->
+  <section class="frame" id="cronologia" data-x="9700" data-y="2800" data-s="1"
+    data-cue="En abril de 2021 aterrizaron en La Aurora tres jets privados…">
+    <p class="kicker">Abril y mayo de 2021</p>
+    <h2>Una visita que no era turística</h2>
+    <div class="timeline">
+      <div class="tl"><div class="d">26 abr</div><div class="x">Tres jets privados aterrizan en La Aurora con un empresario minero y su comitiva</div></div>
+      <div class="tl"><div class="d">27 abr</div><div class="x">Helicóptero a Atitlán; alquilan un hotel completo</div></div>
+      <div class="tl"><div class="d">29 abr</div><div class="x">Por la noche, son llevados a la residencia del presidente Giammattei</div></div>
+      <div class="tl"><div class="d">1 may</div><div class="x">Tikal se cierra solo para los visitantes</div></div>
+    </div>
+    <p class="small" style="margin-top:70px">Objetivo: una terminal en Santo Tomás de Castilla para exportar el níquel de Izabal.</p>
+  </section>
+
+  <!-- Páginas: la alfombra -->
+  <img class="page" id="pg-alfombra" src="img/coberturas/hd-2021-08-25-p5.jpg" alt="Página 5 del 25 de agosto de 2021: la alfombra con dinero"
+    data-left="8150" data-top="3700" data-w="1500">
+  <div class="spot" id="spot-alfombra" data-img="pg-alfombra" data-cx=".225" data-cy=".885" data-cw=".42"
+    data-label="Una alfombra envuelta como regalo, amarrada con un listón rojo, con dinero en efectivo adentro"
+    data-cue="…en la entrada quedó una alfombra envuelta como regalo… con dinero en efectivo adentro."></div>
+
+  <img class="page" id="pg-residencia" src="img/coberturas/hd-2021-08-25-p6.jpg" alt="Página 6 del 25 de agosto de 2021: residencia presidencial"
+    data-left="9850" data-top="3700" data-w="1500">
+  <div class="spot" id="spot-puerta" data-img="pg-residencia" data-cx=".29" data-cy=".24" data-cw=".56"
+    data-label="“Con esa alfombra ya tienen puerta libre en la Portuaria”"
+    data-cue="Con esa alfombra, dijo, ya tenían puerta libre en la portuaria."></div>
+
+  <!-- 8 · Tarifa -->
+  <section class="frame" id="tarifa" data-x="12900" data-y="4600" data-s="1"
+    data-cue="Buscaban una concesión… a cinco centavos de dólar el metro cuadrado.">
+    <div class="row">
+      <div class="col stack" style="flex:1.2">
+        <p class="kicker">Santo Tomás de Castilla</p>
+        <h2>Una concesión casi regalada</h2>
+        <div class="bars">
+          <div class="b"><div class="lab"><span>Tarifa de la portuaria por m²</span><strong>US$4.50</strong></div><div class="track"><div class="fill" data-w="100"></div></div></div>
+          <div class="b"><div class="lab"><span>Lo que ofrecían los rusos por m²</span><strong class="red">US$0.05</strong></div><div class="track"><div class="fill r" data-w="1.1"></div></div></div>
+        </div>
+        <p class="small" style="margin-top:50px">150 mil m² durante 30 años: unos US$3 millones por una concesión valorada en US$240 millones.</p>
+      </div>
+      <div class="col" style="flex:.7">
+        <img class="cover" src="img/fotos/tikal.jpg" alt="Templo I de Tikal" style="width:100%;aspect-ratio:3/4;object-fit:cover">
+        <p class="caption">Tikal, cerrado para la visita. Foto: Kaldari, CC0</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · Captura -->
+  <section class="frame" id="captura" data-x="15500" data-y="4600" data-s="1"
+    data-cue="La respuesta del poder no fue investigar la alfombra. Fue perseguir a quienes la destaparon.">
+    <div class="row">
+      <div class="col" style="flex:.62">
+        <img class="cover" src="img/coberturas/ep-2022-07-30-p1.jpg" alt="Portada del 30 de julio de 2022: Capturan al periodista José Rubén Zamora" style="width:100%;transform:rotate(-2deg)">
+      </div>
+      <div class="col stack" style="flex:1.2">
+        <p class="kicker">29 de julio de 2022</p>
+        <h2>No investigaron la alfombra. Persiguieron a quienes la destaparon.</h2>
+        <div class="person" style="display:flex;gap:40px;align-items:center;margin-top:50px;padding:32px">
+          <img src="img/personas/juan-francisco-sandoval.jpg" alt="Juan Francisco Sandoval" style="width:170px;height:210px;object-fit:cover;border-radius:8px;filter:grayscale(1)">
+          <div><div class="name" style="font-size:52px">Juan Francisco Sandoval</div>
+          <div class="role">Exjefe de la FECI · destituido en julio de 2021 · en el exilio</div>
+          <div class="role" style="font-size:20px;color:var(--g2)">Foto: Embajada de EE. UU., dominio público</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 · 1,295 días -->
+  <section class="frame" id="dias" data-x="15500" data-y="6000" data-s="1.3"
+    data-cue="Pasé 1,295 días en prisión preventiva…">
+    <div style="display:flex;flex-direction:column;justify-content:center;height:100%">
+      <div class="counter"><span data-count="1295">0</span></div>
+      <h3 style="margin-top:20px">días en prisión preventiva</h3>
+      <div class="bar"></div>
+      <p class="lead">Amnistía Internacional lo declaró <strong style="color:#fff">preso de conciencia</strong>.</p>
+    </div>
+  </section>
+
+  <!-- 11 · Cierre de elPeriódico -->
+  <section class="frame" id="cierre" data-x="18100" data-y="4600" data-s="1"
+    data-cue="En mayo de 2023, elPeriódico cerró sus puertas después de 27 años.">
+    <div class="row">
+      <div class="col stack" style="flex:1.2">
+        <p class="kicker">15 de mayo de 2023 · <b>Última edición</b></p>
+        <h2>elPeriódico deja de circular</h2>
+        <ul class="facts" style="margin-top:44px">
+          <li>Periodistas y columnistas señalados por la Fiscalía</li>
+          <li>Buena parte del equipo, <strong>al exilio</strong></li>
+          <li>La familia, <strong>fuera del país</strong></li>
+        </ul>
+        <p class="lead" style="margin-top:44px;font-style:italic">“No se paga solo con la libertad de uno, se paga con la vida entera de los que uno ama.”</p>
+      </div>
+      <div class="col" style="flex:.6">
+        <img class="cover" src="img/coberturas/ep-2023-05-15-p1.jpg" alt="Última portada de elPeriódico, 15 de mayo de 2023: #DecimosNOalPoder" style="width:100%">
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 · Mayor logro -->
+  <section class="frame" id="logro" data-x="18100" data-y="6300" data-s="1.15" data-r="2"
+    data-cue="Tal vez el mayor logro de mi carrera fue quedar preso.">
+    <div class="row">
+      <div class="col">
+        <p class="quote" style="font-size:118px"><span class="q">“</span>Tal vez el mayor logro de mi carrera fue <span class="red">quedar preso</span>.<span class="q">”</span></p>
+      </div>
+      <div class="col" style="flex:.55">
+        <svg viewBox="0 0 600 700" style="width:100%">
+          <g fill="none" stroke="#fff" stroke-width="10" stroke-linejoin="round">
+            <path d="M80 110 Q300 30 520 110 Q540 380 420 560 Q360 650 300 650 Q240 650 180 560 Q60 380 80 110Z" opacity=".9"/>
+            <path d="M150 270 Q205 235 260 270 Q205 300 150 270Z"/>
+            <path d="M340 270 Q395 235 450 270 Q395 300 340 270Z"/>
+            <path d="M230 500 Q300 470 370 500"/>
+          </g>
+          <path d="M300 38 L270 190 L330 300 L280 420 L320 520 L300 650" fill="none" stroke="#E41D12" stroke-width="12" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · Ciclo -->
+  <section class="frame" id="ciclo-f" data-x="20700" data-y="6300" data-s="1"
+    data-cue="…la narco cleptodictadura que moría y volvía a nacer cada cuatro años…">
+    <div class="row">
+      <div class="col" style="flex:.8">
+        <svg id="ciclo" viewBox="0 0 1200 1200" style="width:100%">
+          <g class="ring">
+            <circle cx="600" cy="600" r="470" fill="none" stroke="#3F3F3F" stroke-width="6"/>
+            <path d="M600 130 A470 470 0 0 1 1030 410" fill="none" stroke="#E41D12" stroke-width="14" stroke-linecap="round"/>
+            <path d="M1016 380 L1044 430 L988 428" fill="#E41D12"/>
+          </g>
+          <g font-family="Poppins,sans-serif" font-weight="600" font-size="46" fill="#B4B4B4" text-anchor="middle" id="anios"></g>
+          <text x="600" y="585" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="92" fill="#fff">cada</text>
+          <text x="600" y="690" text-anchor="middle" font-family="Poppins,sans-serif" font-weight="700" font-size="92" fill="#E41D12">4 años</text>
+        </svg>
+      </div>
+      <div class="col stack">
+        <p class="kicker">El intento fallido de democracia</p>
+        <h2>Una narco cleptodictadura que moría y volvía a nacer</h2>
+        <p class="lead" style="margin-top:40px">Con otro nombre y otro partido. Al encarcelar a periodistas, fiscales, jueces y defensores, <strong style="color:#fff">se quitó la máscara</strong>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 · Patrón -->
+  <section class="frame" id="patron" data-x="15500" data-y="8000" data-s=".8"
+    data-cue="Pero no quiero hablar solo de mí, porque mi caso no es una excepción, es un patrón.">
+    <div style="display:flex;flex-direction:column;justify-content:center;height:100%">
+      <h1 style="font-size:170px">Mi caso no es una excepción.</h1>
+      <h1 style="font-size:170px" class="red">Es un patrón.</h1>
+    </div>
+  </section>
+
+  <!-- 15 · Pacheco y Chaclán -->
+  <section class="frame" id="cantones" data-x="12900" data-y="8000" data-s="1"
+    data-cue="Hace apenas unas semanas recuperaron su libertad Luis Pacheco y Héctor Chaclán…">
+    <p class="kicker">48 Cantones de Totonicapán</p>
+    <div style="display:flex;gap:40px">
+      <div class="person" style="flex:1"><div class="name">Luis Pacheco</div><div class="role">Autoridad indígena</div><div class="mono">LP</div></div>
+      <div class="person" style="flex:1"><div class="name">Héctor Chaclán</div><div class="role">Autoridad indígena</div><div class="mono">HC</div></div>
+    </div>
+    <ul class="facts" style="margin-top:40px">
+      <li>En 2023 salieron a defender el voto de todos los guatemaltecos</li>
+      <li><strong>15 meses</strong> en prisión; liberados en agosto de 2026</li>
+      <li><strong>Septiembre de 2026:</strong> caso cerrado y orden de que el Estado les pida disculpas</li>
+    </ul>
+    <div class="cantones"><!--CANTONES--></div>
+  </section>
+
+  <!-- 16 · Stuardo Campo -->
+  <section class="frame" id="campo" data-x="10300" data-y="8000" data-s="1"
+    data-cue="Y mientras hablamos, Stuardo Campo… sigue privado de su libertad.">
+    <div class="row">
+      <div class="col stack">
+        <p class="kicker">Exfiscal contra la corrupción</p>
+        <h1 style="font-size:140px">Stuardo Campo</h1>
+        <p class="lead">Sigue detenido mientras hablamos.</p>
+        <div class="bar"></div>
+        <h2 class="red" style="font-size:80px">Libertad para Stuardo Campo</h2>
+      </div>
+      <div class="col" style="flex:.85">
+        <ul class="facts">
+          <li><strong>Mayo de 2023:</strong> capturado</li>
+          <li><strong>Julio de 2025:</strong> absuelto</li>
+          <li>Una sala revoca la sentencia y sigue preso</li>
+          <li><strong>2026:</strong> el Grupo de Trabajo de la ONU sobre la Detención Arbitraria declara arbitraria su detención y pide su liberación inmediata</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 · Islas de coherencia -> red de solidaridad -->
+  <section class="frame" id="islas" data-x="6600" data-y="8200" data-s="1.5"
+    data-cue="Hoy existen en Guatemala islas de coherencia…">
+    <div class="row">
+      <div class="col stack swap" style="flex:.8">
+        <div class="s1">
+          <p class="kicker">Una oportunidad frágil, pero real</p>
+          <h2>Islas de coherencia</h2>
+          <p class="lead" style="margin-top:40px">Periodismo independiente, derechos humanos, transparencia, autoridades indígenas y comunitarias, defensa legal de los perseguidos.</p>
+        </div>
+        <div class="s2">
+          <p class="kicker">Solidaridad</p>
+          <h2>Esas islas no pueden sobrevivir <span class="red">sin ustedes</span></h2>
+          <p class="lead" style="margin-top:40px">Cuando una voz independiente se apaga, la oscuridad no tarda en ocupar su lugar.</p>
+        </div>
+      </div>
+      <div class="col" style="flex:1.2">
+        <svg id="red" viewBox="0 0 1600 1178" style="width:100%;overflow:visible">
+          <use href="#mapa-ca" class="mapa" style="--GTM:#4a4a4a"/>
+          <!--RED-->
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 · Peticiones -->
+  <section class="frame" id="peticiones" data-x="2600" data-y="8000" data-s="1"
+    data-cue="Me permito, entonces, hacer algunas peticiones concretas.">
+    <p class="kicker">Reimaginemos un esfuerzo regional para el cambio estratégico y la solidaridad</p>
+    <h2>Cuatro peticiones</h2>
+    <div class="asks">
+      <div class="ask"><div class="k">01</div><div class="h">Apoyo de largo plazo y flexible</div><div class="t">La corrupción no trabaja por proyectos de doce meses.</div></div>
+      <div class="ask"><div class="k">02</div><div class="h">Defensa legal y protección integral</div><div class="t">Para periodistas, fiscales, jueces y defensores criminalizados, y sus familias.</div></div>
+      <div class="ask"><div class="k">03</div><div class="h">Acompañamiento en el exilio</div><div class="t">Que nadie pierda su oficio ni su vínculo con su país.</div></div>
+      <div class="ask"><div class="k">04</div><div class="h">Una mirada verdaderamente regional</div><div class="t">Lo que pasó en Guatemala ya pasó en Nicaragua y está pasando en El Salvador.</div></div>
+    </div>
+  </section>
+
+  <!-- 19 · Regional -->
+  <section class="frame bordered" id="regional" data-x="2600" data-y="9300" data-s=".6" data-r="-2"
+    data-cue="Las redes criminales cooperan entre sí sin fronteras; nuestra solidaridad tampoco debería tenerlas.">
+    <div class="row">
+      <div class="col">
+        <svg class="mapa" viewBox="0 0 1600 1178" style="--GTM:var(--red);--NIC:var(--red);--SLV:var(--red);--HND:var(--coral)"><use href="#mapa-ca"/></svg>
+      </div>
+      <div class="col stack">
+        <h2 style="font-size:88px">Las redes criminales cooperan sin fronteras.</h2>
+        <h2 style="font-size:88px" class="red">Nuestra solidaridad tampoco debería tenerlas.</h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 · Villagrán Kramer -->
+  <section class="frame" id="dilema" data-x="0" data-y="8000" data-s="1"
+    data-cue="Mi viejo amigo Pancho Villagrán Kramer solía decir…">
+    <div style="display:flex;flex-direction:column;justify-content:center;height:100%">
+      <p class="lead" style="font-size:54px;color:var(--g3)">“Cuando el dilema es entre los amigos y la Nación, no hay dilema: el camino es la Nación.”</p>
+      <p class="small" style="margin-top:20px">Francisco Villagrán Kramer</p>
+      <div class="bar" style="margin:70px 0"></div>
+      <p class="quote">Cuando el dilema es entre el miedo y la verdad, <span class="red">tampoco hay dilema.</span></p>
+    </div>
+  </section>
+
+  <!-- 21 · Cierre -->
+  <section class="frame" id="final" data-x="0" data-y="4700" data-s="2.1"
+    data-cue="Lo único que les pido es que no dejen solos a quienes hoy siguen diciéndola.">
+    <div class="bgphoto" style="background-image:url(img/fotos/plaza-2015.jpg)"></div>
+    <div class="onphoto" style="display:flex;flex-direction:column;justify-content:center;height:100%">
+      <p class="kicker">1,295 días por el derecho a decir la verdad</p>
+      <h1 style="font-size:124px;max-width:1300px">No dejen solos a quienes hoy siguen <span class="red">diciendo la verdad</span>.</h1>
+      <div class="bar"></div>
+      <h3>Muchas gracias.</h3>
+      <p class="caption" style="position:absolute;bottom:-40px;left:0">Plaza de la Constitución, Paro Nacional del 27 de agosto de 2015. Foto: Nerdoguate, CC BY-SA 4.0</p>
+    </div>
+  </section>
+
+  <!-- 22 · Créditos -->
+  <section class="frame" id="creditos" data-x="-3500" data-y="4700" data-s=".7"
+    data-cue="Créditos y fuentes.">
+    <p class="kicker">Fuentes y créditos</p>
+    <div class="small" style="columns:2;column-gap:80px;font-size:26px">
+      <p><strong style="color:#fff">Archivo de elPeriódico:</strong> ediciones del 7 nov. 1996; 3 may., 3 jul. y 25 ago. 2021; 30 jul. 2022; 15 may. 2023.</p><br>
+      <p><strong style="color:#fff">Casos recientes:</strong> Prensa Comunitaria, Infobae, Amnistía Internacional (Pacheco y Chaclán, 2026); La Hora, ILAAD, Grupo de Trabajo de la ONU sobre la Detención Arbitraria, Opinión 20/2026 (Stuardo Campo).</p><br>
+      <p><strong style="color:#fff">Fotografías:</strong> José Rubén Zamora, elPeriódico (CC BY 3.0); Juan Francisco Sandoval, Embajada de EE. UU. (dominio público); Tikal, Kaldari (CC0); Paro Nacional 2015, Nerdoguate (CC BY-SA 4.0). Vía Wikimedia Commons.</p><br>
+      <p><strong style="color:#fff">Cartografía:</strong> Natural Earth 1:50m (dominio público). <strong style="color:#fff">Tipografía:</strong> Poppins (SIL OFL 1.1). Sistema visual basado en el manual de marca de el_Archivo.</p>
+    </div>
+  </section>
+
+</div>
+</div>
+
+<div id="hud"><i></i></div>
+<div id="num"></div>
+<div id="help">Clic / → avanzar · ← retroceder · O vista general · F pantalla completa · N notas · B pantalla negra</div>
+<div id="notes" hidden></div>
+<div id="blank"></div>
+<div id="loading">CARGANDO</div>
+
+<script>
+(function(){
+  // Orden de la presentación. "state" agrega una clase al marco sin mover la cámara.
+  const STEPS = [
+    "titulo","libre","periodico","soledad","vacuna","pg-vacuna","spot-vacuna",
+    "rusos","cronologia","pg-alfombra","spot-alfombra","spot-puerta","tarifa",
+    "captura","dias","cierre","logro","ciclo-f","patron","cantones","campo",
+    "islas",{id:"islas",state:"state-2"},"peticiones","regional","dilema","final","creditos","@overview"
+  ];
+
+  const vp = document.getElementById("viewport");
+  const canvas = document.getElementById("canvas");
+  const notes = document.getElementById("notes");
+  const W = 1920, H = 1080;
+  const targets = {};
+  let cam = {x:0,y:0,s:1,r:0}, cur = 0, raf = null;
+
+  // Años electorales alrededor del ciclo
+  const anios = [1985,1990,1995,1999,2003,2007,2011,2015,2019];
+  const g = document.getElementById("anios");
+  anios.forEach((a,i)=>{
+    const t = (i/anios.length)*Math.PI*2 - Math.PI/2;
+    const el = document.createElementNS("http://www.w3.org/2000/svg","text");
+    el.setAttribute("x", 600 + Math.cos(t)*545); el.setAttribute("y", 615 + Math.sin(t)*545);
+    el.textContent = a; g.appendChild(el);
+  });
+
+  function layout(){
+    document.querySelectorAll(".frame").forEach(f=>{
+      const x=+f.dataset.x, y=+f.dataset.y, s=+(f.dataset.s||1), r=+(f.dataset.r||0);
+      f.style.transform = `translate(${x-W/2}px,${y-H/2}px) rotate(${r}deg) scale(${s})`;
+      targets[f.id] = {x,y,s,r,el:f};
+    });
+    document.querySelectorAll("img.page").forEach(img=>{
+      const l=+img.dataset.left, t=+img.dataset.top, w=+img.dataset.w;
+      const h = w * img.naturalHeight / img.naturalWidth;
+      Object.assign(img.style,{left:l+"px",top:t+"px",width:w+"px",height:h+"px"});
+      img._rect = {l,t,w,h};
+      targets[img.id] = {x:l+w/2, y:t+h/2, s:Math.max(w/W, h/H)*1.08, r:0, el:img};
+    });
+    document.querySelectorAll(".spot").forEach(sp=>{
+      const R = document.getElementById(sp.dataset.img)._rect;
+      const cw = +sp.dataset.cw*R.w, ch = cw*H/W;
+      const cx = R.l + +sp.dataset.cx*R.w, cy = R.t + +sp.dataset.cy*R.h;
+      const bw = cw*.94, bh = ch*.62;
+      Object.assign(sp.style,{left:(cx-bw/2)+"px",top:(cy-ch/2+ch*.04)+"px",width:bw+"px",height:bh+"px",borderWidth:(cw*.006)+"px"});
+      if(sp.dataset.label){
+        const lab = document.createElement("div"); lab.className="label"; lab.textContent = sp.dataset.label;
+        lab.style.fontSize = (cw*.03)+"px"; sp.appendChild(lab);
+      }
+      targets[sp.id] = {x:cx, y:cy, s:cw/W, r:0, el:sp};
+    });
+    // Vista general
+    let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+    Object.values(targets).forEach(t=>{
+      const hw=W*t.s/2, hh=H*t.s/2;
+      minX=Math.min(minX,t.x-hw); maxX=Math.max(maxX,t.x+hw);
+      minY=Math.min(minY,t.y-hh); maxY=Math.max(maxY,t.y+hh);
+    });
+    targets["@overview"] = {x:(minX+maxX)/2, y:(minY+maxY)/2, s:Math.max((maxX-minX)/W,(maxY-minY)/H)*1.06, r:0};
+  }
+
+  function apply(c){
+    const vw = innerWidth, vh = innerHeight;
+    const k = Math.min(vw/W, vh/H) / c.s;
+    canvas.style.transform = `translate(${vw/2}px,${vh/2}px) scale(${k}) rotate(${-c.r}deg) translate(${-c.x}px,${-c.y}px)`;
+  }
+
+  const ease = t => t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
+
+  function fly(to, instant){
+    cancelAnimationFrame(raf);
+    const from = {...cam};
+    if(instant){ cam = {...to}; apply(cam); return; }
+    const dist = Math.hypot(to.x-from.x, to.y-from.y);
+    const base = Math.max(from.s, to.s)*W;
+    const bump = Math.min(Math.log(1 + dist/base)*.9, 1.6);
+    const dur = Math.min(900 + dist*.12, 2200);
+    const l0 = Math.log(from.s), l1 = Math.log(to.s);
+    const t0 = performance.now();
+    document.body.classList.add("anim");
+    (function step(now){
+      let t = Math.min((now-t0)/dur, 1), e = ease(t);
+      cam = { x: from.x+(to.x-from.x)*e, y: from.y+(to.y-from.y)*e, r: from.r+(to.r-from.r)*e,
+              s: Math.exp(l0+(l1-l0)*e + bump*Math.sin(Math.PI*t)) };
+      apply(cam);
+      if(t<1) raf = requestAnimationFrame(step); else { cam = {...to}; apply(cam); document.body.classList.remove("anim"); }
+    })(t0);
+  }
+
+  function countUp(el){
+    const end = +el.dataset.count, t0 = performance.now(), d = 2200;
+    (function f(now){
+      const t = Math.min((now-t0)/d,1), v = Math.round(end*(1-Math.pow(1-t,3)));
+      el.textContent = v.toLocaleString("en-US"); if(t<1) requestAnimationFrame(f);
+    })(t0);
+  }
+
+  function go(i, instant){
+    cur = Math.max(0, Math.min(STEPS.length-1, i));
+    const st = STEPS[cur], id = typeof st==="string" ? st : st.id;
+    const tg = targets[id];
+    document.querySelectorAll(".active,.near").forEach(e=>e.classList.remove("active","near"));
+    document.querySelectorAll(".frame[class*=state-]").forEach(f=>f.className=f.className.replace(/\bstate-\d\b/g,"").trim());
+    vp.classList.toggle("overview", id==="@overview");
+    if(tg.el){
+      tg.el.classList.add("active");
+      if(tg.el.classList.contains("spot")) document.getElementById(tg.el.dataset.img).classList.add("near");
+      if(st.state) tg.el.classList.add(st.state);
+      tg.el.querySelectorAll("[data-count]").forEach(countUp);
+      tg.el.querySelectorAll(".fill").forEach(b=>b.style.width=b.dataset.w+"%");
+    }
+    fly(tg, instant);
+    document.querySelector("#hud i").style.width = (cur/(STEPS.length-1)*100)+"%";
+    document.getElementById("num").textContent = (cur+1)+" / "+STEPS.length;
+    notes.textContent = (tg.el && tg.el.dataset.cue) || "";
+    history.replaceState(null,"","#"+(cur+1));
+  }
+
+  function toggleFS(){ document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen().catch(()=>{}); }
+
+  addEventListener("keydown", e=>{
+    if(e.metaKey||e.ctrlKey||e.altKey) return;
+    const k = e.key;
+    if(["ArrowRight","ArrowDown","PageDown"," ","Enter"].includes(k)){ e.preventDefault(); go(cur+1); }
+    else if(["ArrowLeft","ArrowUp","PageUp","Backspace"].includes(k)){ e.preventDefault(); go(cur-1); }
+    else if(k==="Home") go(0);
+    else if(k==="End") go(STEPS.length-1);
+    else if(k==="o"||k==="O"){ vp.classList.contains("overview") ? go(cur) : fly(targets["@overview"]), vp.classList.add("overview"); }
+    else if(k==="f"||k==="F") toggleFS();
+    else if(k==="n"||k==="N") notes.hidden = !notes.hidden;
+    else if(k==="b"||k==="B"||k==="."){ document.body.classList.toggle("blank"); }
+  });
+  vp.addEventListener("click", e=>{ if(document.body.classList.contains("blank")) return; go(e.shiftKey ? cur-1 : cur+1); });
+  vp.addEventListener("contextmenu", e=>{ e.preventDefault(); go(cur-1); });
+  addEventListener("resize", ()=>apply(cam));
+  let hideT; addEventListener("mousemove", ()=>{ document.body.classList.add("moving"); clearTimeout(hideT); hideT=setTimeout(()=>document.body.classList.remove("moving"),1800); });
+
+  const imgs = [...document.images];
+  Promise.all(imgs.map(i=>i.complete ? Promise.resolve() : new Promise(r=>{i.onload=i.onerror=r;})))
+    .then(()=>document.fonts ? document.fonts.ready : null)
+    .then(()=>{
+      layout();
+      const h = parseInt(location.hash.slice(1),10);
+      go(Number.isFinite(h) ? h-1 : 0, true);
+      document.body.classList.add("ready");
+    });
+})();
+</script>
+</body>
+</html>
