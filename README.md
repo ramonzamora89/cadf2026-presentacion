@@ -33,6 +33,6 @@ python3 src/build.py
 ## Créditos
 
 - Archivo de elPeriódico (1996 a 2023).
-- Fotografías vía Wikimedia Commons: elPeriódico (CC BY 3.0), Embajada de EE. UU. (dominio público), Kaldari (CC0), Nerdoguate (CC BY-SA 4.0).
+- Fotografías vía Wikimedia Commons: Embajada de EE. UU. (dominio público), Kaldari (CC0), Nerdoguate (CC BY-SA 4.0).
 - Cartografía: Natural Earth (dominio público). Tipografía: Poppins (SIL OFL 1.1).
 - Sistema visual basado en el manual de marca de el_Archivo.
